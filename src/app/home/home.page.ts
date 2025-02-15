@@ -1,4 +1,6 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { event } from '../core/interfaces/event';
 
 @Component({
   selector: 'app-home',
@@ -9,5 +11,23 @@ import { Component } from '@angular/core';
 export class HomePage {
 
   constructor() {}
+
+  events: event[] = [
+    {
+      title: "Event N1",
+      participants: ["Ricky", "Joss"],
+      date: new Date,
+    },
+    {
+      title: "Event N1",
+      participants: ["Joss"],
+      date: new Date,
+    },
+    {
+      title: "Event N1",
+      participants: ["Ricky", "Joss", "Elian"],
+      date: new Date,
+    },
+  ]
 
 }
