@@ -1,0 +1,7 @@
+{
+  "name": "Random-roulette",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
