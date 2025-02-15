@@ -13,7 +13,7 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-card *ngFor="let event of events">
+  <ion-card *ngFor="let event of events" [routerLink]="['/event']" routerLinkActive="router-link-active" >
     <ion-card-header>
       <ion-card-title>{{event.title}}</ion-card-title>
     </ion-card-header>

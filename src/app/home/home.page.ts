@@ -6,7 +6,7 @@ import { event } from '../core/interfaces/event';
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-  standalone: false,
+  standalone: false
 })
 export class HomePage {
 
@@ -19,12 +19,12 @@ export class HomePage {
       date: new Date,
     },
     {
-      title: "Event N1",
+      title: "Event N2",
       participants: ["Joss"],
       date: new Date,
     },
     {
-      title: "Event N1",
+      title: "Event N3",
       participants: ["Ricky", "Joss", "Elian"],
       date: new Date,
     },
