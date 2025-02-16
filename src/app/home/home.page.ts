@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { event } from '../core/interfaces/event';
+import { EventsService } from '../core/services/events.service';
 
 @Component({
   selector: 'app-home',
@@ -10,24 +11,12 @@ import { event } from '../core/interfaces/event';
 })
 export class HomePage {
 
-  constructor() {}
+  events: event[];
 
-  events: event[] = [
-    {
-      title: "Event N1",
-      participants: ["Ricky", "Joss"],
-      date: new Date,
-    },
-    {
-      title: "Event N2",
-      participants: ["Joss"],
-      date: new Date,
-    },
-    {
-      title: "Event N3",
-      participants: ["Ricky", "Joss", "Elian"],
-      date: new Date,
-    },
-  ]
+  constructor(private es: EventsService) {
+    this.events = es.getEvents();
+  }
+
+
 
 }

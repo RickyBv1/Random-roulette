@@ -1,20 +1,33 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>Event</ion-title>
+    <ion-title>{{event?.title}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Event</ion-title>
+      <ion-title size="large">{{event?.title}}</ion-title>
     </ion-toolbar>
   </ion-header>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>
+        {{event?.title}}
+      </ion-card-title>
+    </ion-card-header>
 
-  <ion-card-header>
-    <ion-card-title>
-        Event title
-    </ion-card-title>
-  </ion-card-header>
+    <ion-list>
+      <ion-item *ngFor="let participant of event?.participants, index as i">
+        <ion-label>{{participant.name}}</ion-label>
+        <ion-label>Gives: {{participant.show ? participant.gives : "**********"}}</ion-label>
+        <ion-icon name='{{participant.gives ? "eye-off-outline" : "eye-outline"}}' (click)="participant.show ? participant.show = !participant.show : modalGives(i)"></ion-icon>
+      </ion-item>
+    </ion-list>
 
+  </ion-card>
+  <div class="flex-even">
+    <ion-button class="flex-even" (click)="back()">Go back</ion-button>
+  </div>
+    
 </ion-content>

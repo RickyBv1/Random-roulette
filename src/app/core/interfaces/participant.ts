@@ -1,5 +1,5 @@
 export interface participant {
     name: string,
-    hasTo?: string
-    sample?: boolean,
+    show?: boolean,
+    gives?: string,
 }
