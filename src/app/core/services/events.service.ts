@@ -12,18 +12,19 @@ export class EventsService {
   ) { }
 
   async getEvents(): Promise<event[]> {
-    return await this.storage.get("events");
+    return await (this.storage.get("events")) || [];
   }
 
-  getEvent(id: number) {
-    return this.defaultEvents.find(event => event.id == id)
+  async getEvent(id: number) {
+    const events = await this.getEvents();
+    return events.find(event => event.id == id)
   }
 
   async setNewEvent(event: event) {
     const newEvent: event = event;
     let events = await this.getEvents();
     console.log(events)
-    if(!events || events.length === 0) {
+    if(events.length === 0) {
       newEvent.id = 1;
     } else {
       newEvent.id = events[events.length-1].id!+1
@@ -33,48 +34,25 @@ export class EventsService {
     return newEvent.id
   }
 
-  defaultEvents: event[] = [
-      {
-        id: 1,
-        title: "Event N1",
-        participants: [
-          {
-            name: "Ricky",
-          },
-          {
-            name: "Joss",
-            show: true,
-            gives: "Ricky"
-          }
-        ],
-        date: new Date(),
-      },
-      {
-        id: 2,
-        title: "Event N2",
-        participants: [
-          {
-            name: "Joss"
-          }
-        ],
-        date: new Date(),
-      },
-      {
-        id: 3,
-        title: "Event N3",
-        participants: [
-          {
-            name: "Ricky"
-          },
-          {
-            name:  "Joss"
-          },
-          {
-            name:  "Elian"
-          },
-        ],
-        date: new Date(),
-      },
-    ]
+  drawEvent(event: event):event {
+    const newEvent = event;
+
+    let availableParticipants:string[] = [];
+    event.participants.forEach((participant, i) => {
+      if (participant.name === "") {
+        newEvent.participants.splice(i, 1);
+        availableParticipants.push(event.participants[i].name)
+      } else {
+        availableParticipants.push(participant.name)
+      }
+
+      let randomPosition:number;
+      do{
+        randomPosition = Math.floor(Math.random() * availableParticipants.length)
+      }
+      while(participant.name === availableParticipants[randomPosition]);
+      participant.gives = availableParticipants[randomPosition]
+    })
+  }
 
 }

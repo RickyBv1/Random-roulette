@@ -41,4 +41,12 @@ export class NewEventPage implements OnInit {
     this.navCtrl.navigateBack("");
   }
 
+  addParticipantSpace() {
+    this.currentEvent.participants.push({...emptyParticipant})
+  }
+
+  deleteParticipantSpace(i: number) {
+    this.currentEvent.participants.splice(i, 1);
+  }
+
 }

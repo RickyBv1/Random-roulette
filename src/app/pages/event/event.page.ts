@@ -24,7 +24,7 @@ export class EventPage implements OnInit {
 
     ar.params.subscribe(param => {
       console.log(param["id"])
-      this.event = this.es.getEvent(param["id"])
+      this.es.getEvent(param["id"]).then(event => this.event = event);
     })
 
   }
