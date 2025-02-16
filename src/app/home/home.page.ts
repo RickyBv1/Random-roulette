@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { event } from '../core/interfaces/event';
 import { EventsService } from '../core/services/events.service';
+import { ViewWillEnter } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -9,12 +10,17 @@ import { EventsService } from '../core/services/events.service';
   styleUrls: ['home.page.scss'],
   standalone: false
 })
-export class HomePage {
+export class HomePage implements ViewWillEnter {
 
-  events: event[];
+  events?: event[];
 
-  constructor(private es: EventsService) {
-    this.events = es.getEvents();
+  constructor(
+    private es: EventsService
+  ) {}
+  ionViewWillEnter(): void {
+    this.es.getEvents().then(events => {
+      this.events = events ? events : [];
+    })
   }
 
 

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { event } from 'src/app/core/interfaces/event';
 import { emptyParticipant } from 'src/app/core/interfaces/participant';
+import { EventsService } from 'src/app/core/services/events.service';
 
 @Component({
   selector: 'app-new-event',
@@ -13,6 +14,7 @@ export class NewEventPage implements OnInit {
 
   constructor(
     private navCtrl: NavController,
+    private es: EventsService,
   ) { }
 
   currentEvent: event = {
@@ -34,9 +36,9 @@ export class NewEventPage implements OnInit {
     this.currentEvent.date = new Date(dateEvent.detail.value);
   }
   
-  save() {
-    console.log("SAVE", this.currentEvent)
-
+  async save() {
+    await this.es.setNewEvent(this.currentEvent);
+    this.navCtrl.navigateBack("");
   }
 
 }
