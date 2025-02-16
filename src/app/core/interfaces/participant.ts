@@ -1,5 +1,10 @@
 export interface participant {
     name: string,
-    show?: boolean,
     gives?: string,
+    show?: boolean,
+}
+
+export const emptyParticipant:participant = {
+    name: "",
+    show: false,
 }
