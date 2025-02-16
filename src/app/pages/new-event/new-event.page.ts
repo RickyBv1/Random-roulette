@@ -17,7 +17,7 @@ export class NewEventPage implements OnInit {
 
   currentEvent: event = {
     title: "",
-    participants: [emptyParticipant, emptyParticipant, emptyParticipant],
+    participants: [{...emptyParticipant}, {...emptyParticipant}, {...emptyParticipant}],
     date: new Date(),
   }
 
@@ -30,7 +30,12 @@ export class NewEventPage implements OnInit {
     this.navCtrl.navigateBack("");
   }
 
+  changeDate(dateEvent: any) {
+    this.currentEvent.date = new Date(dateEvent.detail.value);
+  }
+  
   save() {
+    console.log("SAVE", this.currentEvent)
 
   }
 

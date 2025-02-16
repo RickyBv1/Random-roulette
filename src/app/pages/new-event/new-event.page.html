@@ -13,14 +13,14 @@
 
   <ion-card>
     <ion-card-header>
-      <ion-card-title>Name of the event</ion-card-title>
+      <ion-card-title>{{currentEvent.title === "" ? "New event" : currentEvent.title}}</ion-card-title>
     </ion-card-header>
     
     <ion-card-content>
-      <form>
+      <form (ngSubmit)="save()" #form="ngForm">
 
         <ion-item>
-          <ion-input label="Name of the event" labelPlacement="floating" placeholder="Name of the event inside the placeholder"></ion-input>
+          <ion-input label="Name of the event" labelPlacement="floating" placeholder="Name of the event inside the placeholder"  [(ngModel)]="currentEvent.title" name="event-name" [required]="true"></ion-input>
         </ion-item>
 
         <ion-item>
@@ -28,22 +28,22 @@
 
           <ion-modal [keepContentsMounted]="true">
             <ng-template>
-              <ion-datetime id="datetime" [min]="today"></ion-datetime>
+              <ion-datetime id="datetime" [min]="today" (ionChange)="changeDate($event)"></ion-datetime>
             </ng-template>
           </ion-modal>
         </ion-item>
 
         <ion-item *ngFor="let participant of currentEvent.participants, index as i">
-          <ion-input label="Participant {{i+1}}" labelPlacement="floating" placeholder="Ricky"></ion-input>
+          <ion-input label="Participant {{i+1}}" labelPlacement="floating" placeholder="Ricky" [(ngModel)]="currentEvent.participants[i].name" name="{{'participant' + i}}"></ion-input>
         </ion-item>
           
+        <div class="flex-even">
+          <ion-button fill="outline" (click)="discard()">Go back</ion-button>
+          <ion-button type="submit"(click)="save()" [disabled]="form.invalid">Save</ion-button>
+        </div>
+
       </form>
     </ion-card-content>
   </ion-card>
-
-  <div class="flex-even">
-    <ion-button fill="outline" (click)="save()">Save</ion-button>
-    <ion-button (click)="discard()">Go back</ion-button>
-  </div>
 
 </ion-content>
