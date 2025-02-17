@@ -71,4 +71,10 @@ export class EventsService {
     this.storage.set("events", newEvents);
   }
 
+  async deleteEvent(id: number) {
+    const events = await this.storage.get("events");
+    const newEvents = events.filter((event:event) => event.id !=id);
+    this.storage.set("events", newEvents)
+  }
+
 }

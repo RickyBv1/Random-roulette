@@ -45,3 +45,12 @@
     display: flex;
     justify-content: center;
 }
+
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+}
+
+.finished-event {
+    border: 2px solid rgb(167, 24, 24);
+}

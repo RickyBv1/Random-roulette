@@ -34,7 +34,7 @@
         </ion-item>
 
         <ion-item *ngFor="let participant of currentEvent.participants, index as i">
-          <ion-input label="Participant {{i+1}}" labelPlacement="floating" placeholder="Ricky" [(ngModel)]="currentEvent.participants[i].name" name="{{'participant' + i}}"></ion-input>
+          <ion-input label="Participant {{i+1}}" labelPlacement="floating" placeholder="Your name" [(ngModel)]="currentEvent.participants[i].name" name="{{'participant' + i}}"></ion-input>
           <ion-icon id="trash" name="trash-bin-outline" (click)="deleteParticipantSpace(i)"></ion-icon>
         </ion-item>
         

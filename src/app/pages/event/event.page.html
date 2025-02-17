@@ -10,8 +10,8 @@
       <ion-title size="large">{{event?.title}}</ion-title>
     </ion-toolbar>
   </ion-header>
-  <ion-card>
-    <ion-card-header>
+  <ion-card [ngClass]="{'finished-event': event?.ended}">
+    <ion-card-header class="flex-between">
       <ion-card-title>
         {{event?.title}}
       </ion-card-title>

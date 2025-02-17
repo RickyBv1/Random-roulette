@@ -65,8 +65,37 @@ export class EventPage implements OnInit {
     this.navCtrl.navigateBack("");
   }
 
-  modalDelete() {
+  async modalDelete() {
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: 'Deleting the event',
+      subHeader: 'Are you sure you want to delete the event?',
+      buttons: [
+        {
+          text: 'Delete',
+          role: 'delete',
+          data: {
+            action: 'delete',
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          data: {
+            action: 'cancel',
+          },
+        },
+      ],
+    });
 
+    await actionSheet.present();
+
+    const result = await actionSheet.onDidDismiss();
+    this.result = JSON.stringify(result, null, 2)
+    if (result.role === "cancel") return;
+    if (result.role === "delete") {
+      this.es.deleteEvent(this.event!.id!);
+    }
+    this.back()
   }
 
   async modalReDraw() {
@@ -103,8 +132,38 @@ export class EventPage implements OnInit {
 
   }
 
-  modalEnd() {
+  async modalEnd() {
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: 'Changing the status of the event',
+      subHeader: this.event!.ended ? 'Do you want to restore the event?' : 'Do you want to end and block this event?',
+      buttons: [
+        {
+          text: this.event!.ended ? 'Restore the event' : 'End the event',
+          role: 'change',
+          data: {
+            action: 'change',
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          data: {
+            action: 'cancel',
+          },
+        },
+      ],
+    });
 
+    await actionSheet.present();
+
+    const result = await actionSheet.onDidDismiss();
+    this.result = JSON.stringify(result, null, 2)
+    if (result.role === "cancel") return;
+    if (result.role === "change") {
+      this.event!.ended = !this.event!.ended
+      this.es.editEvent(this.event!);
+    }
+    if(this.event!.ended) this.back()
   }
 
 }
