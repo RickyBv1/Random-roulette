@@ -15,6 +15,19 @@
       <ion-card-title>
         {{event?.title}}
       </ion-card-title>
+
+      <div>
+        <ion-button fill="outline" (click)="modalDelete()">
+          <ion-icon id="trash" name="trash-bin-outline"></ion-icon>
+        </ion-button>
+        <ion-button fill="outline" (click)="modalReDraw()">
+          <ion-icon name="repeat-outline"></ion-icon>
+        </ion-button>
+        <ion-button fill="outline" (click)="modalEnd()">
+          <ion-icon name="checkbox-outline"></ion-icon>
+        </ion-button>
+      </div>
+
     </ion-card-header>
 
     <ion-list>

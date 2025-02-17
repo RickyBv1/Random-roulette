@@ -15,7 +15,7 @@ export class EventsService {
     return await (this.storage.get("events")) || [];
   }
 
-  async getEvent(id: number) {
+  async getEventById(id: number) {
     const events = await this.getEvents();
     return events.find(event => event.id == id)
   }
@@ -30,14 +30,14 @@ export class EventsService {
       newEvent.id = events[events.length-1].id!+1
     }
     events.push(event);
-    this.storage.set("event", events);
+    this.storage.set("events", events);
     return newEvent.id
   }
 
   drawEvent(event: event):event {
     const newEvent = event;
-
     let availableParticipants:string[] = [];
+    
     event.participants.forEach((participant, i) => {
       if (participant.name === "") {
         newEvent.participants.splice(i, 1);
@@ -45,14 +45,30 @@ export class EventsService {
       } else {
         availableParticipants.push(participant.name)
       }
+    })
 
-      let randomPosition:number;
+    newEvent.participants.forEach((participant) => {
+      let randomPosition:number | undefined;
       do{
         randomPosition = Math.floor(Math.random() * availableParticipants.length)
       }
       while(participant.name === availableParticipants[randomPosition]);
       participant.gives = availableParticipants[randomPosition]
+      availableParticipants.splice(randomPosition, 1);
     })
+    return newEvent;
+  }
+
+  async editEvent(editEvent: event) {
+    const events:event[] = await this.getEvents();
+    const newEvents = events.filter(event => event.id != editEvent.id);
+    newEvents.forEach(event => {
+      event.participants.forEach(participant => participant.show = false)
+    });
+    editEvent.participants.forEach(participant => participant.show = false)
+    newEvents.push(editEvent);
+    newEvents.sort((a, b)=> a.id! - b.id!);
+    this.storage.set("events", newEvents);
   }
 
 }

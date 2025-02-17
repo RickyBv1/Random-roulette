@@ -24,7 +24,7 @@ export class EventPage implements OnInit {
 
     ar.params.subscribe(param => {
       console.log(param["id"])
-      this.es.getEvent(param["id"]).then(event => this.event = event);
+      this.es.getEventById(param["id"]).then(event => this.event = event);
     })
 
   }
@@ -63,6 +63,48 @@ export class EventPage implements OnInit {
 
   back() {
     this.navCtrl.navigateBack("");
+  }
+
+  modalDelete() {
+
+  }
+
+  async modalReDraw() {
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: 'Redrawing the event',
+      subHeader: 'Are you sure you want to redraw the event?',
+      buttons: [
+        {
+          text: 'Redraw',
+          role: 'redraw',
+          data: {
+            action: 'redraw',
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          data: {
+            action: 'cancel',
+          },
+        },
+      ],
+    });
+
+    await actionSheet.present();
+
+    const result = await actionSheet.onDidDismiss();
+    this.result = JSON.stringify(result, null, 2)
+    if (result.role === "cancel") return;
+    if (result.role === "redraw") {
+      const newEvent = this.es.drawEvent(this.event!);
+      this.es.editEvent(newEvent);
+    }
+
+  }
+
+  modalEnd() {
+
   }
 
 }

@@ -37,7 +37,8 @@ export class NewEventPage implements OnInit {
   }
   
   async save() {
-    await this.es.setNewEvent(this.currentEvent);
+    const raffledEvent = this.es.drawEvent(this.currentEvent)
+    await this.es.setNewEvent(raffledEvent);
     this.navCtrl.navigateBack("");
   }
 
