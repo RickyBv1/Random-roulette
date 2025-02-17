@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ActionSheetController, NavController } from '@ionic/angular';
+import { ActionSheetController, NavController, } from '@ionic/angular';
 import { event } from 'src/app/core/interfaces/event';
 import { EventsService } from 'src/app/core/services/events.service';
+import { ToastService } from 'src/app/core/services/toast.service';
 
 @Component({
   selector: 'app-event',
@@ -20,6 +21,7 @@ export class EventPage implements OnInit {
     private es: EventsService,
     private actionSheetCtrl: ActionSheetController,
     private navCtrl: NavController,
+    private ts: ToastService
   ) {
 
     ar.params.subscribe(param => {
@@ -95,6 +97,7 @@ export class EventPage implements OnInit {
     if (result.role === "delete") {
       this.es.deleteEvent(this.event!.id!);
     }
+    this.ts.presentToast("Event deleted successfully")
     this.back()
   }
 
@@ -128,6 +131,7 @@ export class EventPage implements OnInit {
     if (result.role === "redraw") {
       const newEvent = this.es.drawEvent(this.event!);
       this.es.editEvent(newEvent);
+      this.ts.presentToast("Event redrawn successfully")
     }
 
   }
@@ -163,6 +167,7 @@ export class EventPage implements OnInit {
       this.event!.ended = !this.event!.ended
       this.es.editEvent(this.event!);
     }
+    this.ts.presentToast(this.event!.ended ? "Event ended successfully" : "Event reopened successfully")
     if(this.event!.ended) this.back()
   }
 

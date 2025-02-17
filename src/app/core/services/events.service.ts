@@ -7,12 +7,18 @@ import { StorageService } from './storage.service';
 })
 export class EventsService {
 
-  constructor(
-    private storage: StorageService
-  ) { }
+  constructor(private storage: StorageService) { }
 
-  async getEvents(): Promise<event[]> {
-    return await (this.storage.get("events")) || [];
+  async getEvents(filter: "active" | "ended" | "all" = "all"): Promise<event[]> {
+    const events = await this.storage.get("events") || [];
+    switch(filter) {
+      case "all": 
+        return events;
+      case "active": 
+        return events.filter((event:event) => event.ended !== true);
+      case "ended": 
+        return events.filter((event:event) => event.ended === true);
+    }
   }
 
   async getEventById(id: number) {
