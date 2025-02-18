@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ActionSheetController, NavController, } from '@ionic/angular';
 import { event } from 'src/app/core/interfaces/event';
@@ -11,7 +11,7 @@ import { ToastService } from 'src/app/core/services/toast.service';
   styleUrls: ['./event.page.scss'],
   standalone: false
 })
-export class EventPage implements OnInit {
+export class EventPage {
 
   event?: event;
   result?: string;
@@ -25,23 +25,18 @@ export class EventPage implements OnInit {
   ) {
 
     ar.params.subscribe(param => {
-      console.log(param["id"])
       this.es.getEventById(param["id"]).then(event => this.event = event);
     })
-
   }
 
-  ngOnInit() {
-  }
-
-  async modalGives(i:number) {
+  async modalGives(id:number) {
     const actionSheet = await this.actionSheetCtrl.create({
       header: 'Who are you giving to',
       subHeader: 'Are you sure you want to see this information?',
       buttons: [
         {
           text: 'Show',
-          role: 'show',
+          role: 'change',
           data: {
             action: 'show',
           },
@@ -60,11 +55,14 @@ export class EventPage implements OnInit {
 
     const result = await actionSheet.onDidDismiss();
     this.result = JSON.stringify(result, null, 2)
-    if (result.role === "show") this.event!.participants[i].show = !this.event?.participants[i].show
+    if (result.role === "cancel") return;
+    if (result.role === "change") {
+      this.event!.participants[id].show = !this.event?.participants[id].show
+    }
   }
 
   back() {
-    this.navCtrl.navigateBack("");
+    this.navCtrl.navigateRoot("");
   }
 
   async modalDelete() {
@@ -97,7 +95,6 @@ export class EventPage implements OnInit {
     if (result.role === "delete") {
       this.es.deleteEvent(this.event!.id!);
     }
-    this.ts.presentToast("Event deleted successfully")
     this.back()
   }
 
@@ -131,9 +128,8 @@ export class EventPage implements OnInit {
     if (result.role === "redraw") {
       const newEvent = this.es.drawEvent(this.event!);
       this.es.editEvent(newEvent);
-      this.ts.presentToast("Event redrawn successfully")
     }
-
+    this.ts.defaultToast("Event redrawn successfully")
   }
 
   async modalEnd() {
@@ -167,7 +163,7 @@ export class EventPage implements OnInit {
       this.event!.ended = !this.event!.ended
       this.es.editEvent(this.event!);
     }
-    this.ts.presentToast(this.event!.ended ? "Event ended successfully" : "Event reopened successfully")
+    this.ts.defaultToast(this.event!.ended ? "Event ended successfully" : "Event reopened successfully")
     if(this.event!.ended) this.back()
   }
 

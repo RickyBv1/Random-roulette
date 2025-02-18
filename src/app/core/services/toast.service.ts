@@ -8,7 +8,7 @@ export class ToastService {
 
   constructor(private toastController: ToastController) { }
 
-  async presentToast(message:string, position: 'top' | 'middle' | 'bottom' = 'bottom') {
+  async defaultToast(message:string, position: 'top' | 'middle' | 'bottom' = 'bottom') {
     const toast = await this.toastController.create({
       message: message,
       duration: 1500,

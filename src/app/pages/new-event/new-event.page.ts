@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { AlertController, NavController } from '@ionic/angular';
+import { Component } from '@angular/core';
+import { AlertController, NavController, ToastController } from '@ionic/angular';
 import { event } from 'src/app/core/interfaces/event';
 import { emptyParticipant } from 'src/app/core/interfaces/participant';
 import { EventsService } from 'src/app/core/services/events.service';
@@ -9,16 +9,20 @@ import { ToastService } from 'src/app/core/services/toast.service';
   selector: 'app-new-event',
   templateUrl: './new-event.page.html',
   styleUrls: ['./new-event.page.scss'],
-  standalone: false,
+  standalone: false
 })
-export class NewEventPage implements OnInit {
+export class NewEventPage {
+
+  today: string;
 
   constructor(
     private navCtrl: NavController,
     private es: EventsService,
     private ts: ToastService,
     private alertController: AlertController
-  ) { }
+  ) {
+    this.today = new Date().toISOString()
+  }
 
   currentEvent: event = {
     title: "",
@@ -26,34 +30,21 @@ export class NewEventPage implements OnInit {
     date: new Date(),
   }
 
-  today = new Date().toISOString();
-
-  ngOnInit() {
-  }
-
   discard() {
-    this.navCtrl.navigateBack("");
+    this.navCtrl.navigateRoot("");
   }
 
-  changeDate(dateEvent: any) {
-    this.currentEvent.date = new Date(dateEvent.detail.value);
+  changeDate(dateStr: any) {
+    this.currentEvent.date = new Date(dateStr.detail.value);
   }
   
-  async save() {
-    const realParticipants = this.currentEvent.participants.filter(participant => participant.name !== "")
+  async saveForm() {
+    const realParticipants = this.currentEvent.participants.filter(participant => participant.name !== "");
     if(realParticipants.length < 3) return this.alertMissingParticipants();
     const raffledEvent = this.es.drawEvent(this.currentEvent)
-    await this.es.setNewEvent(raffledEvent);
-    this.ts.presentToast("Event created successfully")
-    this.navCtrl.navigateBack("");
-  }
-
-  addParticipantSpace() {
-    this.currentEvent.participants.push({...emptyParticipant})
-  }
-
-  deleteParticipantSpace(i: number) {
-    this.currentEvent.participants.splice(i, 1);
+    const idEvent = await this.es.setNewEvent(raffledEvent)
+    this.ts.defaultToast("Event added!");
+    this.navCtrl.navigateForward(['events', idEvent])
   }
 
   async alertMissingParticipants() {
@@ -65,5 +56,16 @@ export class NewEventPage implements OnInit {
 
     await alert.present();
   }
+
+  addParticipantSpace() {
+    this.currentEvent.participants.push({...emptyParticipant})
+  }
+
+  deleteParticipantSpace(i: number) {
+    const newParticipants = Array.from(this.currentEvent.participants);
+    newParticipants.splice(i, 1);
+    this.currentEvent.participants = newParticipants
+  }
+
 
 }

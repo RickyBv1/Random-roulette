@@ -13,32 +13,34 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-segment
-  value="active"
-  (ionChange)="getEvents()"
-  [(ngModel)]="filter">
-    <ion-segment-button value="active">
+  <ion-segment value="active" [(ngModel)]="filter">
+    <ion-segment-button value="active" (click)="getEvents('active')">
       <ion-label>Active</ion-label>
     </ion-segment-button>
-    <ion-segment-button value="ended">
+    <ion-segment-button value="ended" (click)="getEvents('ended')">
       <ion-label>Ended</ion-label>
     </ion-segment-button>
-    <ion-segment-button value="all">
+    <ion-segment-button value="all" (click)="getEvents('all')">
       <ion-label>All</ion-label>
     </ion-segment-button>
   </ion-segment>
 
+  <div id="no-events" *ngIf="events.length === 0">
+    <h2>No available events</h2>
+    <p>Add your first event clicking the "+" button</p>
+  </div>
+
   <ion-card 
   *ngFor="let event of events"
-  [routerLink]="['/event', event.id]" routerLinkActive="router-link-active"
-  [ngClass]="{'finished-event': event?.ended}" >
+  [routerLink]="['/event', event.id]"
+  [ngClass]="{'finished-event': event.ended}" >
     <ion-card-header>
       <ion-card-title>{{event.title}}</ion-card-title>
     </ion-card-header>
   
     <ion-card-content>
-      <p>number of participants: {{event.participants.length}}.</p>
-      <p>date of the event: {{getDaysUntilEvent(event.date)}}.</p>
+      <p>{{event.participants.length}} participants.</p>
+      <p>{{getDaysUntilEvent(event.date)}}.</p>
     </ion-card-content>
   </ion-card>
 

@@ -17,7 +17,7 @@
     </ion-card-header>
     
     <ion-card-content>
-      <form (ngSubmit)="save()" #form="ngForm">
+      <form (ngSubmit)="saveForm()" #new="ngForm">
 
         <ion-item>
           <ion-input label="Name of the event" labelPlacement="floating" placeholder="Name of the event"  [(ngModel)]="currentEvent.title" name="event-name" [required]="true"></ion-input>
@@ -25,17 +25,19 @@
 
         <ion-item>
           <ion-datetime-button datetime="datetime"></ion-datetime-button>
+        </ion-item>
 
           <ion-modal [keepContentsMounted]="true">
             <ng-template>
-              <ion-datetime id="datetime" [min]="today" (ionChange)="changeDate($event)"></ion-datetime>
+              <ion-datetime id="datetime" min="{{today}}" (ionChange)="changeDate($event)"></ion-datetime>
             </ng-template>
           </ion-modal>
-        </ion-item>
 
         <ion-item *ngFor="let participant of currentEvent.participants, index as i">
-          <ion-input label="Participant {{i+1}}" labelPlacement="floating" placeholder="Your name" [(ngModel)]="currentEvent.participants[i].name" name="{{'participant' + i}}"></ion-input>
-          <ion-icon id="trash" name="trash-bin-outline" (click)="deleteParticipantSpace(i)"></ion-icon>
+          <div class="participant">
+            <ion-input label="Participant {{i+1}}" labelPlacement="floating" placeholder="Your name" [(ngModel)]="participant.name" name="participant{{i}}"></ion-input>
+            <ion-icon id="trash" name="trash-bin-outline" (click)="deleteParticipantSpace(i)"></ion-icon>
+          </div>
         </ion-item>
         
         <div class="flex-center">
@@ -45,8 +47,8 @@
         </div>
 
         <div class="flex-even">
-          <ion-button fill="outline" (click)="discard()">Go back</ion-button>
-          <ion-button type="submit"(click)="save()" [disabled]="form.invalid">Save</ion-button>
+          <ion-button fill="outline" (click)="discard()">Discard</ion-button>
+          <ion-button type="submit" [disabled]="new.invalid">Save</ion-button>
         </div>
 
       </form>

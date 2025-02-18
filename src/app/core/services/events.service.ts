@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { eventsList } from 'src/assets/fakeData';
 import { event } from "../interfaces/event";
 import { StorageService } from './storage.service';
 
@@ -21,23 +22,43 @@ export class EventsService {
     }
   }
 
-  async getEventById(id: number) {
-    const events = await this.getEvents();
-    return events.find(event => event.id == id)
+  async getEventById(id: number) : Promise<event | undefined> {
+    const events = await this.getEvents("all");
+    const selectedEvent = events.find(event => event.id == id)
+    return selectedEvent;
   }
 
-  async setNewEvent(event: event) {
-    const newEvent: event = event;
-    let events = await this.getEvents();
-    console.log(events)
-    if(events.length === 0) {
+  async setNewEvent(event: event): Promise<number> {
+    const newEvent = event;
+    let currentEvents: event[] = await this.getEvents("all");
+    if(!currentEvents || currentEvents.length === 0) {
+      currentEvents = []
       newEvent.id = 1;
     } else {
-      newEvent.id = events[events.length-1].id!+1
+      newEvent.id = currentEvents[currentEvents.length-1].id!+1
     }
-    events.push(event);
-    this.storage.set("events", events);
+    currentEvents.push(newEvent);
+    this.storage.set("events", currentEvents);
     return newEvent.id
+  }
+
+
+  async editEvent(editEvent: event) {
+    const events:event[] = await this.storage.get("events");
+    const newEvents: event[] = events.filter((event: event) => event.id != editEvent.id);
+    events.forEach(event => {
+      event.participants.forEach(participant => participant.show = false)
+    });
+    newEvents.push(editEvent);
+    newEvents.sort((a, b) => a.id! - b.id!)
+    this.storage.set("events", newEvents);
+    return
+  }
+
+  async deleteEvent(id: number) {
+    const events = await this.storage.get("events");
+    const newEvents = events.filter((event:event) => event.id != id);
+    this.storage.set("events", newEvents);
   }
 
   drawEvent(event: event):event {
@@ -46,7 +67,7 @@ export class EventsService {
     
     event.participants.forEach((participant, i) => {
       if (participant.name === "") {
-        newEvent.participants.splice(i, 1);
+        event.participants.splice(i, 1);
         availableParticipants.push(event.participants[i].name)
       } else {
         availableParticipants.push(participant.name)
@@ -63,24 +84,6 @@ export class EventsService {
       availableParticipants.splice(randomPosition, 1);
     })
     return newEvent;
-  }
-
-  async editEvent(editEvent: event) {
-    const events:event[] = await this.getEvents();
-    const newEvents = events.filter(event => event.id != editEvent.id);
-    newEvents.forEach(event => {
-      event.participants.forEach(participant => participant.show = false)
-    });
-    editEvent.participants.forEach(participant => participant.show = false)
-    newEvents.push(editEvent);
-    newEvents.sort((a, b)=> a.id! - b.id!);
-    this.storage.set("events", newEvents);
-  }
-
-  async deleteEvent(id: number) {
-    const events = await this.storage.get("events");
-    const newEvents = events.filter((event:event) => event.id !=id);
-    this.storage.set("events", newEvents)
   }
 
 }

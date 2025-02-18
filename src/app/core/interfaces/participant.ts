@@ -4,7 +4,10 @@ export interface participant {
     gives?: string,
 }
 
+export const defaultParticipant:participant = {
+    name: "Ricky"
+}
+
 export const emptyParticipant:participant = {
     name: "",
-    show: false,
 }
