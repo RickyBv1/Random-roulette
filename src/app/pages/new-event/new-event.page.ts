@@ -37,6 +37,10 @@ export class NewEventPage {
   changeDate(dateStr: any) {
     this.currentEvent.date = new Date(dateStr.detail.value);
   }
+
+  save() {
+    this.navCtrl.navigateRoot("");
+  }
   
   async saveForm() {
     const realParticipants = this.currentEvent.participants.filter(participant => participant.name !== "");

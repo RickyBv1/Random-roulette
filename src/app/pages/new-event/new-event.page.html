@@ -48,7 +48,7 @@
 
         <div class="flex-even">
           <ion-button fill="outline" (click)="discard()">Discard</ion-button>
-          <ion-button type="submit" [disabled]="new.invalid">Save</ion-button>
+          <ion-button type="submit" [disabled]="new.invalid" (click)="save()">Save</ion-button>
         </div>
 
       </form>
